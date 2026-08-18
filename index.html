@@ -1,164 +1,916 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ADAPTILEARN — Multiverse Learning HQ</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
- --red:#ff0038;--cyan:#00d9ee;--yellow:#ffe600;--pink:#ff0084;
- --ink:#17171a;--muted:#67676d;--paper:#fff;--soft:#f3f3f3;
- --shadow:6px 6px 0 #050505;--border:3px solid #101010;
-}
-html,body{min-height:100%;font-family:Archivo,Arial,sans-serif;background:#fdfdfd;color:var(--ink)}
-body{
- background-color:#fafafa;
- background-image:radial-gradient(#ffb5c4 1.2px,transparent 1.2px);
- background-size:16px 16px;
-}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-a{text-decoration:none;color:inherit}
-.app{min-height:100vh}
-.sidebar{
- position:fixed;left:0;top:0;bottom:0;width:304px;background:#fff;
- border-right:3px solid #111;z-index:30;display:flex;flex-direction:column;
-}
-.brand{height:72px;padding:17px 18px;border-bottom:0;display:flex;align-items:center}
-.brand img{width:155px;height:auto;object-fit:contain}
-.brand-fallback{font-weight:900;font-style:italic;font-size:24px;color:#111}
-.collapse{
- position:absolute;right:-15px;top:34px;width:30px;height:30px;border:3px solid #111;
- background:var(--yellow);border-radius:50%;font-weight:900;z-index:50
-}
-.nav{padding:18px 12px;display:flex;flex-direction:column;gap:6px}
-.nav a{height:48px;border:2px solid transparent;border-radius:14px;display:flex;align-items:center;gap:15px;padding:0 17px;font-weight:800;font-size:14px;color:#5d5d62}
-.nav a:hover{background:#f3f3f3;border-color:#aaa}
-.nav a.active{background:var(--red);border-color:#111;color:#fff;box-shadow:4px 4px 0 #111}
-.ico{width:22px;text-align:center;font-size:19px}
-.sidebar-bottom{margin-top:auto;border-top:2px solid #111;padding:18px 15px 22px}
-.streak{border:3px solid #111;border-radius:16px;box-shadow:5px 5px 0 #111;padding:14px 15px;background:#fff;margin-bottom:18px}
-.yellow-tag{display:inline-block;background:var(--yellow);border:2px solid #111;box-shadow:3px 3px 0 #111;padding:7px 12px;font-size:12px;font-weight:900;letter-spacing:.3px}
-.streak strong{display:block;font-size:25px;margin-top:9px}
-.streak span{font-size:12px;color:#777;font-weight:700}
-.side-action{display:block;padding:12px 15px;font-weight:800;color:#555}
-.side-action.logout{color:var(--red)}
-.main{margin-left:304px;min-height:100vh}
-.topbar{height:72px;background:#fff;border-bottom:3px solid #111;display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:20}
-.search{width:min(640px,55%);height:43px;border:3px solid #111;border-radius:15px;background:#f5f5f5;display:flex;align-items:center;gap:10px;padding:0 15px;box-shadow:2px 2px 0 #111}
-.search input{border:0;outline:0;background:transparent;width:100%;font-size:13px;font-weight:700;color:#555}
-.top-actions{position:absolute;right:25px;display:flex;gap:10px}
-.top-btn{width:43px;height:43px;background:#fff;border:3px solid #111;border-radius:12px;font-weight:900}
-.top-btn.avatar{background:var(--red);color:#fff}
-.page{padding:36px 36px 60px;max-width:1500px;margin:auto}
-.hero{
- background:#fff;border:3px solid #111;box-shadow:var(--shadow);border-radius:25px;padding:34px 38px;
- margin-bottom:30px;position:relative;overflow:hidden
-}
-.hero h1{font-size:37px;line-height:1.05;margin:13px 0 12px;font-weight:900;letter-spacing:-1.5px;text-shadow:3px 0 var(--cyan),-3px 0 var(--red)}
-.hero p{color:#5e5e63;font-size:16px;font-weight:700;max-width:900px}
-.section-title{font-size:21px;font-weight:900;margin:25px 0 15px;display:flex;align-items:center;justify-content:space-between}
-.section-title small{font-size:12px;color:#777}
-.grid{display:grid;gap:22px}
-.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.card{background:#fff;border:3px solid #111;border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
-.btn{border:3px solid #111;border-radius:13px;min-height:46px;padding:0 20px;font-weight:900;background:#fff;box-shadow:4px 4px 0 #111}
-.btn.red{background:var(--red);color:#fff}
-.btn.cyan{background:var(--cyan)}
-.btn.yellow{background:var(--yellow)}
-.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #111}
-.tag{display:inline-block;background:var(--yellow);border:2px solid #111;padding:6px 10px;font-size:11px;font-weight:900;box-shadow:3px 3px 0 #111}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
-.stat{background:#fff;border:3px solid #111;border-radius:19px;box-shadow:var(--shadow);padding:20px}
-.stat .num{font-size:32px;font-weight:900;margin:9px 0 4px;text-shadow:2px 0 var(--cyan),-2px 0 var(--red)}
-.stat small{font-weight:800;color:#777}
-.course-img{width:100%;height:210px;object-fit:cover;display:block;border-bottom:3px solid #111}
-.course-body{padding:15px}
-.course-title{font-size:15px;font-weight:900;line-height:1.25;min-height:42px}
-.meta{color:#777;font-size:10px;font-weight:800;margin:7px 0 12px}
-.course-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:15px}
-.course-tags span{border:1.5px solid #111;background:#f2f2f2;border-radius:5px;padding:4px 7px;font-size:9px;font-weight:800}
-.full-btn{width:100%}
-.split{display:grid;grid-template-columns:2fr 1fr;gap:22px}
-.empty{min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px}
-.empty .bigicon{font-size:58px;color:#bbb;margin-bottom:15px}
-.empty h3{font-size:21px;margin-bottom:10px}
-.empty p{color:#888;max-width:500px;font-weight:600;margin-bottom:20px}
-.panel{padding:22px}
-.panel h3{font-size:16px;margin-bottom:18px}
-.dashboard-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:22px}
-.banner{
- min-height:300px;border:3px solid #111;box-shadow:var(--shadow);border-radius:25px;padding:35px;
- color:#fff;position:relative;overflow:hidden;
- background:linear-gradient(110deg,#ff0066 0%,#a20bd1 52%,#10244e 100%);
-}
-.banner:after{content:"";position:absolute;right:20px;bottom:-50px;width:260px;height:320px;background:url("assets/spider.jpg") center bottom/contain no-repeat;opacity:.75}
-.banner h2{font-size:36px;max-width:650px;line-height:1.05;margin:15px 0}
-.banner p{font-weight:700;max-width:600px;margin-bottom:20px}
-.chart-card{padding:22px}
-.bars{height:220px;display:flex;align-items:end;gap:15px;border-bottom:2px solid #111;padding:0 12px}
-.bar{flex:1;background:var(--cyan);border:2px solid #111;border-bottom:0;min-height:30px}
-.bar:nth-child(4),.bar:nth-child(7){background:var(--red)}
-.bar-labels{display:flex;justify-content:space-around;font-size:10px;font-weight:800;padding-top:7px}
-.profile-layout{display:grid;grid-template-columns:360px 1fr;gap:22px}
-.profile-card{padding:25px;text-align:center}
-.avatar-box{width:125px;height:125px;margin:0 auto 20px;background:#050505;border:4px solid var(--cyan);box-shadow:5px 5px 0 var(--red);border-radius:20px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:52px;font-weight:900}
-.profile-card img{height:190px;max-width:100%;object-fit:contain;margin:20px auto}
-.activity{border:2px solid #111;border-radius:20px;padding:20px;margin-top:20px}
-.activity-grid{display:grid;grid-template-columns:repeat(18,1fr);gap:6px;margin-top:20px}
-.activity-grid i{height:16px;background:#f0f0f0;border-radius:4px}
-.activity-grid i:nth-child(7n){background:#b6eadc}.activity-grid i:nth-child(13n){background:#56cfad}
-.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
-.badge{border:2px solid #111;border-radius:17px;padding:15px;text-align:center;background:#f7f7f7}
-.badge .bicon{font-size:35px;margin-bottom:8px}.badge b{font-size:13px}.badge small{display:block;color:#777;margin-top:5px}
-.interview{max-width:900px;margin:0 auto;border:3px solid #111;box-shadow:var(--shadow);border-radius:25px;background:#fff;min-height:620px;display:flex;flex-direction:column}
-.chat{padding:25px;flex:1}.bubble{border:2px solid #111;border-radius:18px;background:#f1f1f1;padding:17px;margin-bottom:18px;box-shadow:3px 3px 0 #111;font-weight:700}
-.chat .q{border-top:8px solid var(--yellow)}
-.chatbar{border-top:2px solid #111;padding:15px;display:flex;gap:12px}.chatbar textarea{flex:1;resize:none;border:3px solid #111;border-radius:14px;padding:13px;outline:0}
-.missions .mission{padding:22px}.mission h3{font-size:19px;margin:14px 0}.mission p{color:#666;line-height:1.55;font-weight:600}.flow{background:#eee;border:2px solid #111;border-radius:15px;padding:15px;margin:18px 0;color:#666;font-size:12px;font-weight:700}
-.auth{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:#fff}
-.auth-left{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#fff}
-.auth-left .circle{width:490px;height:490px;border:5px solid #b5f6ff;border-radius:50%;box-shadow:0 0 45px #c9fbff}
-.auth-left img{position:absolute;bottom:0;right:6%;height:220px}
-.auth-right{background:#f5f5f5;display:flex;align-items:center;justify-content:center}
-.auth-card{width:min(600px,80%);background:#fff;border:3px solid #111;box-shadow:8px 8px 0 #111;border-radius:30px;padding:45px}
-.auth-card h1{font-size:32px;text-align:center;text-shadow:3px 0 var(--cyan),-3px 0 var(--red);margin:15px 0 8px}
-.field{margin:17px 0}.field label{display:block;font-size:13px;font-weight:900;margin-bottom:7px}.field input{width:100%;height:54px;border:3px solid #111;border-radius:15px;padding:0 16px;background:#f4f4f4;outline:0}
-.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
-.toast{position:fixed;right:25px;bottom:25px;background:#111;color:#fff;border:3px solid #111;box-shadow:5px 5px 0 var(--red);padding:15px 18px;border-radius:13px;font-weight:800;z-index:100;display:none}
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:90}
-.modal{background:#fff;border:3px solid #111;box-shadow:7px 7px 0 #111;border-radius:20px;padding:25px;width:min(650px,90%)}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{border:2px solid #111;background:#fff;border-radius:9px;width:35px;height:35px;font-weight:900}
-@media(max-width:1100px){.sidebar{width:230px}.main{margin-left:230px}.grid-3{grid-template-columns:1fr 1fr}.grid-4,.stats{grid-template-columns:1fr 1fr}.profile-layout,.dashboard-grid,.split{grid-template-columns:1fr}.page{padding:24px}.auth{grid-template-columns:1fr}.auth-left{display:none}}
-@media(max-width:720px){.sidebar{position:fixed;transform:translateX(-100%);transition:.2s;width:270px}.sidebar.open{transform:none}.main{margin-left:0}.topbar{justify-content:flex-start;padding-left:15px}.search{width:58%}.grid-3,.grid-2,.grid-4,.stats,.badges{grid-template-columns:1fr}.hero h1{font-size:29px}.banner h2{font-size:28px}.top-actions{right:8px}.top-actions .top-btn:first-child{display:none}}
-</style>
-</head>
-<body>
-<div id="root"></div>
-<div id="toast" class="toast"></div>
-<div id="modalBackdrop" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="modalTitle">Action</h3><button class="close" onclick="closeModal()">×</button></div><div id="modalBody"></div></div></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>ADAPTILEARN — Multiverse Learning HQ</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap");
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --red: #ff0038;
+        --cyan: #00d9ee;
+        --yellow: #ffe600;
+        --pink: #ff0084;
+        --ink: #17171a;
+        --muted: #67676d;
+        --paper: #fff;
+        --soft: #f3f3f3;
+        --shadow: 6px 6px 0 #050505;
+        --border: 3px solid #101010;
+      }
+      html,
+      body {
+        min-height: 100%;
+        font-family: Archivo, Arial, sans-serif;
+        background: #fdfdfd;
+        color: var(--ink);
+      }
+      body {
+        background-color: #fafafa;
+        background-image: radial-gradient(#ffb5c4 1.2px, transparent 1.2px);
+        background-size: 16px 16px;
+      }
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .app {
+        min-height: 100vh;
+      }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 304px;
+        background: #fff;
+        border-right: 3px solid #111;
+        z-index: 30;
+        display: flex;
+        flex-direction: column;
+      }
+      .brand {
+        height: 72px;
+        padding: 17px 18px;
+        border-bottom: 0;
+        display: flex;
+        align-items: center;
+      }
+      .brand img {
+        width: 155px;
+        height: auto;
+        object-fit: contain;
+      }
+      .brand-fallback {
+        font-weight: 900;
+        font-style: italic;
+        font-size: 24px;
+        color: #111;
+      }
+      .collapse {
+        position: absolute;
+        right: -15px;
+        top: 34px;
+        width: 30px;
+        height: 30px;
+        border: 3px solid #111;
+        background: var(--yellow);
+        border-radius: 50%;
+        font-weight: 900;
+        z-index: 50;
+      }
+      .nav {
+        padding: 18px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .nav a {
+        height: 48px;
+        border: 2px solid transparent;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 0 17px;
+        font-weight: 800;
+        font-size: 14px;
+        color: #5d5d62;
+      }
+      .nav a:hover {
+        background: #f3f3f3;
+        border-color: #aaa;
+      }
+      .nav a.active {
+        background: var(--red);
+        border-color: #111;
+        color: #fff;
+        box-shadow: 4px 4px 0 #111;
+      }
+      .ico {
+        width: 22px;
+        text-align: center;
+        font-size: 19px;
+      }
+      .sidebar-bottom {
+        margin-top: auto;
+        border-top: 2px solid #111;
+        padding: 18px 15px 22px;
+      }
+      .streak {
+        border: 3px solid #111;
+        border-radius: 16px;
+        box-shadow: 5px 5px 0 #111;
+        padding: 14px 15px;
+        background: #fff;
+        margin-bottom: 18px;
+      }
+      .yellow-tag {
+        display: inline-block;
+        background: var(--yellow);
+        border: 2px solid #111;
+        box-shadow: 3px 3px 0 #111;
+        padding: 7px 12px;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.3px;
+      }
+      .streak strong {
+        display: block;
+        font-size: 25px;
+        margin-top: 9px;
+      }
+      .streak span {
+        font-size: 12px;
+        color: #777;
+        font-weight: 700;
+      }
+      .side-action {
+        display: block;
+        padding: 12px 15px;
+        font-weight: 800;
+        color: #555;
+      }
+      .side-action.logout {
+        color: var(--red);
+      }
+      .main {
+        margin-left: 304px;
+        min-height: 100vh;
+      }
+      .topbar {
+        height: 72px;
+        background: #fff;
+        border-bottom: 3px solid #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+      .search {
+        width: min(640px, 55%);
+        height: 43px;
+        border: 3px solid #111;
+        border-radius: 15px;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 15px;
+        box-shadow: 2px 2px 0 #111;
+      }
+      .search input {
+        border: 0;
+        outline: 0;
+        background: transparent;
+        width: 100%;
+        font-size: 13px;
+        font-weight: 700;
+        color: #555;
+      }
+      .top-actions {
+        position: absolute;
+        right: 25px;
+        display: flex;
+        gap: 10px;
+      }
+      .top-btn {
+        width: 43px;
+        height: 43px;
+        background: #fff;
+        border: 3px solid #111;
+        border-radius: 12px;
+        font-weight: 900;
+      }
+      .top-btn.avatar {
+        background: var(--red);
+        color: #fff;
+      }
+      .page {
+        padding: 36px 36px 60px;
+        max-width: 1500px;
+        margin: auto;
+      }
+      .hero {
+        background: #fff;
+        border: 3px solid #111;
+        box-shadow: var(--shadow);
+        border-radius: 25px;
+        padding: 34px 38px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero h1 {
+        font-size: 37px;
+        line-height: 1.05;
+        margin: 13px 0 12px;
+        font-weight: 900;
+        letter-spacing: -1.5px;
+        text-shadow:
+          3px 0 var(--cyan),
+          -3px 0 var(--red);
+      }
+      .hero p {
+        color: #5e5e63;
+        font-size: 16px;
+        font-weight: 700;
+        max-width: 900px;
+      }
+      .section-title {
+        font-size: 21px;
+        font-weight: 900;
+        margin: 25px 0 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .section-title small {
+        font-size: 12px;
+        color: #777;
+      }
+      .grid {
+        display: grid;
+        gap: 22px;
+      }
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .card {
+        background: #fff;
+        border: 3px solid #111;
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .btn {
+        border: 3px solid #111;
+        border-radius: 13px;
+        min-height: 46px;
+        padding: 0 20px;
+        font-weight: 900;
+        background: #fff;
+        box-shadow: 4px 4px 0 #111;
+      }
+      .btn.red {
+        background: var(--red);
+        color: #fff;
+      }
+      .btn.cyan {
+        background: var(--cyan);
+      }
+      .btn.yellow {
+        background: var(--yellow);
+      }
+      .btn:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0 #111;
+      }
+      .tag {
+        display: inline-block;
+        background: var(--yellow);
+        border: 2px solid #111;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-weight: 900;
+        box-shadow: 3px 3px 0 #111;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+      }
+      .stat {
+        background: #fff;
+        border: 3px solid #111;
+        border-radius: 19px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+      }
+      .stat .num {
+        font-size: 32px;
+        font-weight: 900;
+        margin: 9px 0 4px;
+        text-shadow:
+          2px 0 var(--cyan),
+          -2px 0 var(--red);
+      }
+      .stat small {
+        font-weight: 800;
+        color: #777;
+      }
+      .course-img {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+        display: block;
+        border-bottom: 3px solid #111;
+      }
+      .course-body {
+        padding: 15px;
+      }
+      .course-title {
+        font-size: 15px;
+        font-weight: 900;
+        line-height: 1.25;
+        min-height: 42px;
+      }
+      .meta {
+        color: #777;
+        font-size: 10px;
+        font-weight: 800;
+        margin: 7px 0 12px;
+      }
+      .course-tags {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+      }
+      .course-tags span {
+        border: 1.5px solid #111;
+        background: #f2f2f2;
+        border-radius: 5px;
+        padding: 4px 7px;
+        font-size: 9px;
+        font-weight: 800;
+      }
+      .full-btn {
+        width: 100%;
+      }
+      .split {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 22px;
+      }
+      .empty {
+        min-height: 390px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 30px;
+      }
+      .empty .bigicon {
+        font-size: 58px;
+        color: #bbb;
+        margin-bottom: 15px;
+      }
+      .empty h3 {
+        font-size: 21px;
+        margin-bottom: 10px;
+      }
+      .empty p {
+        color: #888;
+        max-width: 500px;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+      .panel {
+        padding: 22px;
+      }
+      .panel h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+      }
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 22px;
+      }
+      .banner {
+        min-height: 300px;
+        border: 3px solid #111;
+        box-shadow: var(--shadow);
+        border-radius: 25px;
+        padding: 35px;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(
+          110deg,
+          #ff0066 0%,
+          #a20bd1 52%,
+          #10244e 100%
+        );
+      }
+      .banner:after {
+        content: "";
+        position: absolute;
+        right: 20px;
+        bottom: -50px;
+        width: 260px;
+        height: 320px;
+        background: url("assets/spider.jpg") center bottom/contain no-repeat;
+        opacity: 0.75;
+      }
+      .banner h2 {
+        font-size: 36px;
+        max-width: 650px;
+        line-height: 1.05;
+        margin: 15px 0;
+      }
+      .banner p {
+        font-weight: 700;
+        max-width: 600px;
+        margin-bottom: 20px;
+      }
+      .chart-card {
+        padding: 22px;
+      }
+      .bars {
+        height: 220px;
+        display: flex;
+        align-items: end;
+        gap: 15px;
+        border-bottom: 2px solid #111;
+        padding: 0 12px;
+      }
+      .bar {
+        flex: 1;
+        background: var(--cyan);
+        border: 2px solid #111;
+        border-bottom: 0;
+        min-height: 30px;
+      }
+      .bar:nth-child(4),
+      .bar:nth-child(7) {
+        background: var(--red);
+      }
+      .bar-labels {
+        display: flex;
+        justify-content: space-around;
+        font-size: 10px;
+        font-weight: 800;
+        padding-top: 7px;
+      }
+      .profile-layout {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 22px;
+      }
+      .profile-card {
+        padding: 25px;
+        text-align: center;
+      }
+      .avatar-box {
+        width: 125px;
+        height: 125px;
+        margin: 0 auto 20px;
+        background: #050505;
+        border: 4px solid var(--cyan);
+        box-shadow: 5px 5px 0 var(--red);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 52px;
+        font-weight: 900;
+      }
+      .profile-card img {
+        height: 190px;
+        max-width: 100%;
+        object-fit: contain;
+        margin: 20px auto;
+      }
+      .activity {
+        border: 2px solid #111;
+        border-radius: 20px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      .activity-grid {
+        display: grid;
+        grid-template-columns: repeat(18, 1fr);
+        gap: 6px;
+        margin-top: 20px;
+      }
+      .activity-grid i {
+        height: 16px;
+        background: #f0f0f0;
+        border-radius: 4px;
+      }
+      .activity-grid i:nth-child(7n) {
+        background: #b6eadc;
+      }
+      .activity-grid i:nth-child(13n) {
+        background: #56cfad;
+      }
+      .badges {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+      }
+      .badge {
+        border: 2px solid #111;
+        border-radius: 17px;
+        padding: 15px;
+        text-align: center;
+        background: #f7f7f7;
+      }
+      .badge .bicon {
+        font-size: 35px;
+        margin-bottom: 8px;
+      }
+      .badge b {
+        font-size: 13px;
+      }
+      .badge small {
+        display: block;
+        color: #777;
+        margin-top: 5px;
+      }
+      .interview {
+        max-width: 900px;
+        margin: 0 auto;
+        border: 3px solid #111;
+        box-shadow: var(--shadow);
+        border-radius: 25px;
+        background: #fff;
+        min-height: 620px;
+        display: flex;
+        flex-direction: column;
+      }
+      .chat {
+        padding: 25px;
+        flex: 1;
+      }
+      .bubble {
+        border: 2px solid #111;
+        border-radius: 18px;
+        background: #f1f1f1;
+        padding: 17px;
+        margin-bottom: 18px;
+        box-shadow: 3px 3px 0 #111;
+        font-weight: 700;
+      }
+      .chat .q {
+        border-top: 8px solid var(--yellow);
+      }
+      .chatbar {
+        border-top: 2px solid #111;
+        padding: 15px;
+        display: flex;
+        gap: 12px;
+      }
+      .chatbar textarea {
+        flex: 1;
+        resize: none;
+        border: 3px solid #111;
+        border-radius: 14px;
+        padding: 13px;
+        outline: 0;
+      }
+      .missions .mission {
+        padding: 22px;
+      }
+      .mission h3 {
+        font-size: 19px;
+        margin: 14px 0;
+      }
+      .mission p {
+        color: #666;
+        line-height: 1.55;
+        font-weight: 600;
+      }
+      .flow {
+        background: #eee;
+        border: 2px solid #111;
+        border-radius: 15px;
+        padding: 15px;
+        margin: 18px 0;
+        color: #666;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .auth {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: #fff;
+      }
+      .auth-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background: #fff;
+      }
+      .auth-left .circle {
+        width: 490px;
+        height: 490px;
+        border: 5px solid #b5f6ff;
+        border-radius: 50%;
+        box-shadow: 0 0 45px #c9fbff;
+      }
+      .auth-left img {
+        position: absolute;
+        bottom: 0;
+        right: 6%;
+        height: 220px;
+      }
+      .auth-right {
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .auth-card {
+        width: min(600px, 80%);
+        background: #fff;
+        border: 3px solid #111;
+        box-shadow: 8px 8px 0 #111;
+        border-radius: 30px;
+        padding: 45px;
+      }
+      .auth-card h1 {
+        font-size: 32px;
+        text-align: center;
+        text-shadow:
+          3px 0 var(--cyan),
+          -3px 0 var(--red);
+        margin: 15px 0 8px;
+      }
+      .field {
+        margin: 17px 0;
+      }
+      .field label {
+        display: block;
+        font-size: 13px;
+        font-weight: 900;
+        margin-bottom: 7px;
+      }
+      .field input {
+        width: 100%;
+        height: 54px;
+        border: 3px solid #111;
+        border-radius: 15px;
+        padding: 0 16px;
+        background: #f4f4f4;
+        outline: 0;
+      }
+      .auth-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 18px;
+      }
+      .toast {
+        position: fixed;
+        right: 25px;
+        bottom: 25px;
+        background: #111;
+        color: #fff;
+        border: 3px solid #111;
+        box-shadow: 5px 5px 0 var(--red);
+        padding: 15px 18px;
+        border-radius: 13px;
+        font-weight: 800;
+        z-index: 100;
+        display: none;
+      }
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 90;
+      }
+      .modal {
+        background: #fff;
+        border: 3px solid #111;
+        box-shadow: 7px 7px 0 #111;
+        border-radius: 20px;
+        padding: 25px;
+        width: min(650px, 90%);
+      }
+      .modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .close {
+        border: 2px solid #111;
+        background: #fff;
+        border-radius: 9px;
+        width: 35px;
+        height: 35px;
+        font-weight: 900;
+      }
+      @media (max-width: 1100px) {
+        .sidebar {
+          width: 230px;
+        }
+        .main {
+          margin-left: 230px;
+        }
+        .grid-3 {
+          grid-template-columns: 1fr 1fr;
+        }
+        .grid-4,
+        .stats {
+          grid-template-columns: 1fr 1fr;
+        }
+        .profile-layout,
+        .dashboard-grid,
+        .split {
+          grid-template-columns: 1fr;
+        }
+        .page {
+          padding: 24px;
+        }
+        .auth {
+          grid-template-columns: 1fr;
+        }
+        .auth-left {
+          display: none;
+        }
+      }
+      @media (max-width: 720px) {
+        .sidebar {
+          position: fixed;
+          transform: translateX(-100%);
+          transition: 0.2s;
+          width: 270px;
+        }
+        .sidebar.open {
+          transform: none;
+        }
+        .main {
+          margin-left: 0;
+        }
+        .topbar {
+          justify-content: flex-start;
+          padding-left: 15px;
+        }
+        .search {
+          width: 58%;
+        }
+        .grid-3,
+        .grid-2,
+        .grid-4,
+        .stats,
+        .badges {
+          grid-template-columns: 1fr;
+        }
+        .hero h1 {
+          font-size: 29px;
+        }
+        .banner h2 {
+          font-size: 28px;
+        }
+        .top-actions {
+          right: 8px;
+        }
+        .top-actions .top-btn:first-child {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="toast" class="toast"></div>
+    <div id="modalBackdrop" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h3 id="modalTitle">Action</h3>
+          <button class="close" onclick="closeModal()">×</button>
+        </div>
+        <div id="modalBody"></div>
+      </div>
+    </div>
 
-<script>
-const courses=[
- {img:'assets/course1.jpg',tag:'AI / ML',earth:'EARTH-1610',title:'NEURAL NETWORKS & DEEP LEARNING – EARTH-1610 AI PROTOCOL',author:'3BLUE1BROWN',views:'14.8M',likes:'540K'},
- {img:'assets/course2.jpg',tag:'FULL STACK',earth:'EARTH-65',title:'FULL STACK NEXT.JS 14 & REACT – EARTH-65 WEB-SLINGING ARCHITECTURE',author:'JAVASCRIPT MASTERY',views:'1.9M',likes:'62K'},
- {img:'assets/course3.jpg',tag:'SYSTEM DESIGN',earth:'EARTH-2099',title:'SYSTEM DESIGN & DISTRIBUTED SCALABILITY – NUEVA YORK 2099 MATRIX',author:'GAURAV SEN',views:'1.8M',likes:'65K'},
- {img:'assets/course4.jpg',tag:'FRONTEND',earth:'EARTH-8311',title:'REACT 18 FULL COURSE – EARTH-8311 REACTIVE UI PROTOCOL',author:'FREECODECAMP.ORG',views:'4.2M',likes:'120K'},
- {img:'assets/course5.jpg',tag:'FRONTEND',earth:'EARTH-199999',title:'TYPESCRIPT MASTERCLASS – EARTH-199999 QUANTUM STATIC TYPING',author:'FREECODECAMP.ORG',views:'2.1M',likes:'82K'},
- {img:'assets/course6.jpg',tag:'DEVOPS',earth:'EARTH-50101',title:'DOCKER & KUBERNETES – EARTH-50101 MUMBAI CLOUD NEXUS',author:'TECHWORLD WITH NANA',views:'3.3M',likes:'91K'}
-];
-const state={route:'dashboard',dark:false,menu:false};
+    <script>
+      const courses = [
+        {
+          img: "assets/course1.jpg",
+          tag: "AI / ML",
+          earth: "EARTH-1610",
+          title: "NEURAL NETWORKS & DEEP LEARNING – EARTH-1610 AI PROTOCOL",
+          author: "3BLUE1BROWN",
+          views: "14.8M",
+          likes: "540K",
+        },
+        {
+          img: "assets/course2.jpg",
+          tag: "FULL STACK",
+          earth: "EARTH-65",
+          title:
+            "FULL STACK NEXT.JS 14 & REACT – EARTH-65 WEB-SLINGING ARCHITECTURE",
+          author: "JAVASCRIPT MASTERY",
+          views: "1.9M",
+          likes: "62K",
+        },
+        {
+          img: "assets/course3.jpg",
+          tag: "SYSTEM DESIGN",
+          earth: "EARTH-2099",
+          title:
+            "SYSTEM DESIGN & DISTRIBUTED SCALABILITY – NUEVA YORK 2099 MATRIX",
+          author: "GAURAV SEN",
+          views: "1.8M",
+          likes: "65K",
+        },
+        {
+          img: "assets/course4.jpg",
+          tag: "FRONTEND",
+          earth: "EARTH-8311",
+          title: "REACT 18 FULL COURSE – EARTH-8311 REACTIVE UI PROTOCOL",
+          author: "FREECODECAMP.ORG",
+          views: "4.2M",
+          likes: "120K",
+        },
+        {
+          img: "assets/course5.jpg",
+          tag: "FRONTEND",
+          earth: "EARTH-199999",
+          title: "TYPESCRIPT MASTERCLASS – EARTH-199999 QUANTUM STATIC TYPING",
+          author: "FREECODECAMP.ORG",
+          views: "2.1M",
+          likes: "82K",
+        },
+        {
+          img: "assets/course6.jpg",
+          tag: "DEVOPS",
+          earth: "EARTH-50101",
+          title: "DOCKER & KUBERNETES – EARTH-50101 MUMBAI CLOUD NEXUS",
+          author: "TECHWORLD WITH NANA",
+          views: "3.3M",
+          likes: "91K",
+        },
+      ];
+      const state = { route: "dashboard", dark: false, menu: false };
 
-function nav(){
-return `<aside class="sidebar ${state.menu?'open':''}">
+      function nav() {
+        return `<aside class="sidebar ${state.menu ? "open" : ""}">
  <button class="collapse" onclick="toggleMenu()">‹</button>
  <div class="brand"><img src="assets/logo.jpg" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="brand-fallback" style="display:none">ADAPTILEARN</span></div>
  <nav class="nav">
- ${[['dashboard','⌂','DASHBOARD'],['courses','♧','COURSES'],['learning','▣','MY LEARNING'],['revision','◴','REVISION'],['projects','▤','PROJECTS'],['interview','▢','INTERVIEW PREP'],['analytics','▥','ANALYTICS'],['profile','♙','PROFILE']].map(x=>`<a href="#/${x[0]}" class="${state.route===x[0]?'active':''}" onclick="closeMenu()"><span class="ico">${x[1]}</span>${x[2]}</a>`).join('')}
+ ${[
+   ["dashboard", "⌂", "DASHBOARD"],
+   ["courses", "♧", "COURSES"],
+   ["learning", "▣", "MY LEARNING"],
+   ["revision", "◴", "REVISION"],
+   ["projects", "▤", "PROJECTS"],
+   ["interview", "▢", "INTERVIEW PREP"],
+   ["analytics", "▥", "ANALYTICS"],
+   ["profile", "♙", "PROFILE"],
+ ]
+   .map(
+     (x) =>
+       `<a href="#/${x[0]}" class="${state.route === x[0] ? "active" : ""}" onclick="closeMenu()"><span class="ico">${x[1]}</span>${x[2]}</a>`,
+   )
+   .join("")}
  </nav>
  <div class="sidebar-bottom">
    <div class="streak"><span class="yellow-tag">DAILY STREAK</span><strong>12</strong><span>DAYS ACTIVE 🔥</span></div>
@@ -166,84 +918,281 @@ return `<aside class="sidebar ${state.menu?'open':''}">
    <a class="side-action logout" href="#/login" onclick="toast('Signed out of HQ')">↪ &nbsp; LOGOUT</a>
  </div>
 </aside>`;
-}
-function topbar(){
-return `<header class="topbar"><div class="search">⌕ <input placeholder="SEARCH MULTIVERSE COURSES, TOPICS, CONCEPTS..." oninput="searchCourses(this.value)"></div><div class="top-actions"><button class="top-btn" onclick="toggleTheme()">☾</button><button class="top-btn avatar" onclick="location.hash='#/profile'">A</button></div></header>`;
-}
-function shell(content){return `${nav()}<main class="main">${topbar()}<section class="page">${content}</section></main>`}
+      }
+      function topbar() {
+        return `<header class="topbar"><div class="search">⌕ <input placeholder="SEARCH MULTIVERSE COURSES, TOPICS, CONCEPTS..." oninput="searchCourses(this.value)"></div><div class="top-actions"><button class="top-btn" onclick="toggleTheme()">☾</button><button class="top-btn avatar" onclick="location.hash='#/profile'">A</button></div></header>`;
+      }
+      function shell(content) {
+        return `${nav()}<main class="main">${topbar()}<section class="page">${content}</section></main>`;
+      }
 
-function hero(tag,title,desc){return `<div class="hero"><span class="yellow-tag">${tag}</span><h1>${title}</h1><p>${desc}</p></div>`}
-function courseCard(c){return `<article class="card course-card"><img class="course-img" src="${c.img}"><div class="course-body"><span class="tag">${c.earth}</span> <span class="tag">${c.tag}</span><h3 class="course-title">${c.title}</h3><div class="meta">${c.author}</div><div class="course-tags"><span>NEURAL PATHWAYS</span><span>CONCEPT MASTERY</span><span>+3</span></div><div style="display:flex;justify-content:space-between;font-size:10px;font-weight:800;background:#eee;border:2px solid #111;border-radius:8px;padding:7px;margin-bottom:10px"><span>◉ ${c.views}</span><span>♡ ${c.likes}</span></div><button class="btn red full-btn" onclick="startMission('${c.title.replace(/'/g,'')}')">◉ START MISSION</button></div></article>`}
+      function hero(tag, title, desc) {
+        return `<div class="hero"><span class="yellow-tag">${tag}</span><h1>${title}</h1><p>${desc}</p></div>`;
+      }
+      function courseCard(c) {
+        return `<article class="card course-card"><img class="course-img" src="${c.img}"><div class="course-body"><span class="tag">${c.earth}</span> <span class="tag">${c.tag}</span><h3 class="course-title">${c.title}</h3><div class="meta">${c.author}</div><div class="course-tags"><span>NEURAL PATHWAYS</span><span>CONCEPT MASTERY</span><span>+3</span></div><div style="display:flex;justify-content:space-between;font-size:10px;font-weight:800;background:#eee;border:2px solid #111;border-radius:8px;padding:7px;margin-bottom:10px"><span>◉ ${c.views}</span><span>♡ ${c.likes}</span></div><button class="btn red full-btn" onclick="startMission('${c.title.replace(/'/g, "")}')">◉ START MISSION</button></div></article>`;
+      }
 
-function dashboard(){
-return hero('* MULTIVERSE LEARNING HQ *','READY TO START YOUR FIRST COURSE TODAY?','Your cognitive patterns look great. Keep up the multiverse momentum!')+
-`<div class="dashboard-grid">
- <div><div class="section-title">▥ LEARNING VELOCITY</div><div class="card chart-card"><div style="display:flex;justify-content:space-between"><b style="color:var(--cyan)">⚡ WEEKLY NEURAL OUTPUT</b><span class="tag">+28% VELOCITY</span></div><div class="bars">${[45,80,52,98,70,35,88].map(h=>`<i class="bar" style="height:${h}%"></i>`).join('')}</div><div class="bar-labels"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div></div></div>
+      function dashboard() {
+        return (
+          hero(
+            "* MULTIVERSE LEARNING HQ *",
+            "READY TO START YOUR FIRST COURSE TODAY?",
+            "Your cognitive patterns look great. Keep up the multiverse momentum!",
+          ) +
+          `<div class="dashboard-grid">
+ <div><div class="section-title">▥ LEARNING VELOCITY</div><div class="card chart-card"><div style="display:flex;justify-content:space-between"><b style="color:var(--cyan)">⚡ WEEKLY NEURAL OUTPUT</b><span class="tag">+28% VELOCITY</span></div><div class="bars">${[45, 80, 52, 98, 70, 35, 88].map((h) => `<i class="bar" style="height:${h}%"></i>`).join("")}</div><div class="bar-labels"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div></div></div>
  <div><div class="section-title">◎ YOUR PROGRESS</div><div class="card panel"><div class="stat"><div class="num">0</div><small>COMPLETED</small></div><div class="stat" style="margin-top:15px"><div class="num">0</div><small>BADGES</small></div></div></div>
  <div><div class="section-title">🚀 CURRENT GOAL</div><div class="card panel" style="height:100%"><span class="tag">MASTERY GOAL</span><h3 style="margin:18px 0">PICK A COURSE</h3><small style="font-weight:800">PROGRESS <span style="float:right">0%</span></small><div style="height:12px;border:2px solid #111;border-radius:8px;margin:8px 0 55px;background:#ddd"></div><button class="btn red full-btn" onclick="location.hash='#/courses'">BROWSE ALL</button></div></div>
 </div>
-<div class="section-title">🎓 MULTIVERSE RECOMMENDATIONS <small>EXPLORE ALL ›</small></div><div class="grid grid-3">${courses.slice(0,3).map(courseCard).join('')}</div>`;
-}
+<div class="section-title">🎓 MULTIVERSE RECOMMENDATIONS <small>EXPLORE ALL ›</small></div><div class="grid grid-3">${courses.slice(0, 3).map(courseCard).join("")}</div>`
+        );
+      }
 
-function coursesPage(){
-return hero('🎓 MULTIVERSE ACADEMY','MULTIVERSE COURSE PORTAL','REAL INTERACTIVE FULL-LENGTH COURSES WITH AI DIAGNOSTICS, NOTES, AND MASTERY CHALLENGES')+
-`<div class="card panel" style="margin-bottom:15px"><div class="search" style="width:100%"><span>⌕</span><input id="courseSearch" placeholder="SEARCH TOPICS — NEURAL NETS, NEXT.JS, SYSTEM DESIGN, RUST, DOCKER..." oninput="searchCourses(this.value)"></div></div>
-<div class="course-filter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">${['ALL','AI / ML','FULL STACK','SYSTEM DESIGN','FRONTEND','BACKEND','DEVOPS','CYBERSECURITY','SYSTEMS','DESIGN'].map((x,i)=>`<button class="btn ${i===0?'red':''}" style="min-height:34px;padding:0 13px;font-size:11px;box-shadow:2px 2px 0 #111" onclick="filterCourses('${x}',this)">${x}</button>`).join('')}</div>
-<div class="section-title">FEATURED MULTIVERSE MISSIONS</div><div id="courseGrid" class="grid grid-4">${courses.map(courseCard).join('')}</div>`;
-}
-function learning(){
-return hero('LEARNING WALL','YOUR MULTIVERSE HISTORY','')+
-`<div class="split"><div><div class="section-title">▣ ENROLLED & COMPLETED MISSIONS (0)</div><div class="card empty"><div class="bigicon">▱</div><h3>YOU HAVEN'T ENROLLED IN ANY COURSE MISSIONS YET.</h3><button class="btn red" onclick="location.hash='#/courses'">EXPLORE MULTIVERSE COURSES</button></div></div>
-<div><div class="card panel"><h3>🏆 TELEMETRY OVERVIEW</h3><div class="grid grid-2"><div class="stat"><div class="num" style="color:var(--cyan)">0</div><small>MISSIONS</small></div><div class="stat"><div class="num" style="color:var(--red)">0</div><small>QUIZZES</small></div></div><div class="stat" style="margin-top:15px"><div class="num" style="color:var(--yellow)">88%</div><small>AVERAGE MASTERY SCORE</small></div></div><div class="card panel" style="margin-top:22px;min-height:150px"><h3>◔ RECENT ACTIVITY</h3><p style="color:#999;text-align:center;font-weight:700;margin-top:45px">No recent activity recorded.</p></div></div></div>`;
-}
-function revision(){
-return hero('SPACED REPETITION ENGINE','MULTIVERSE REVISION DECK','REINFORCE NEURAL PATHWAYS FROM COMPLETED MISSIONS, AI TRANSCRIPT BREAKDOWNS, AND MASTERY QUIZZES')+
-`<div class="section-title">▣ COMPLETED MISSIONS & STUDY DECKS <small>0 MISSIONS SAVED</small></div><div class="card empty"><div class="bigicon">▱</div><h3>YOUR MULTIVERSE REVISION QUEUE IS EMPTY</h3><p>Watch video missions or complete mastery quizzes to automatically store study decks here.</p><button class="btn red" onclick="location.hash='#/courses'">▷ EXPLORE COURSE MISSIONS</button></div>`;
-}
-function projects(){
-const ms=[['MODERN PORTFOLIO BUILDER','A sleek, customizable portfolio for developers to showcase their work with dark mode support.','REACT · FRAMER MOTION · TAILWIND CSS · LUCIDE REACT'],['RESTFUL TASK API','A clean and efficient API for managing tasks and reminders.','NODE.JS · EXPRESS · JWT · FIREBASE'],['SIMPLE SENTIMENT ANALYZER','Categorizes text input as positive, negative, or neutral for customer reviews.','PYTHON · NLTK · FLASK · REACT']];
-return hero('MULTIVERSE LABS','ADAPTIVE PORTFOLIO MISSIONS','GENERATING BEGINNER PROJECTS BASED ON YOUR LEARNING PATTERNS')+
-`<div class="grid grid-3 missions">${ms.map(m=>`<article class="card mission"><span class="tag">BEGINNER</span><h3>${m[0]}</h3><b style="font-size:10px;color:#8b36e9">USE CASE</b><p>${m[1]}</p><div class="flow"><b style="color:var(--cyan)">⌘ SYSTEM FLOW</b><br><br>User edits data → UI updates live → Sections for experience, skills, and projects → Optimized for SEO.</div><div class="course-tags">${m[2].split(' · ').map(x=>`<span>${x}</span>`).join('')}</div><button class="btn red full-btn" onclick="openModal('${m[0]}','Mission briefing loaded. Start building this project and track it from your Projects page.')">✧ START MISSION</button></article>`).join('')}</div>`;
-}
-function interview(){
-return `<div style="max-width:900px;margin:auto">${hero('AI SIMULATION','MULTIVERSE INTERVIEW PREP','') }<div class="interview"><div class="chat"><div class="bubble">🤖 Welcome to your Multiverse AI Mock Interview! I've analyzed your progress in 0 courses. Let's test your depth!</div><div class="bubble q"><span class="tag">CONCEPTUAL · INTERMEDIATE</span><br><br>Could you explain the difference between 'state' and 'props' in a React application? When would you choose one over the other for data management?</div></div><div class="chatbar"><textarea id="answer" rows="2" placeholder="TYPE YOUR ANSWER..."></textarea><button class="btn red" onclick="sendAnswer()">➤</button></div></div></div>`;
-}
-function analytics(){
-return hero('TELEMETRY & SPECS','MULTIVERSE COGNITIVE TELEMETRY','DETAILED INSIGHTS INTO YOUR ADAPTIVE LEARNING VELOCITY')+
-`<div class="stats">${[['◷','2.7h','AVG. DAILY TIME','+12%'],['◎','88%','QUIZ ACCURACY','+5%'],['♧','47','CONCEPTS MASTERED','+8'],['↗','92%','WEEKLY PROGRESS','+3%']].map(x=>`<div class="stat"><div style="font-size:26px">${x[0]}</div><div class="num">${x[1]}</div><small>${x[2]}</small><span class="tag" style="float:right;margin-top:-55px">${x[3]}</span></div>`).join('')}</div>
-<div class="grid grid-2"><div class="card chart-card"><h3>◷ LEARNING TIME <span class="tag" style="float:right">THIS WEEK</span></h3><div class="bars">${[55,72,43,90,65,28,80].map(h=>`<i class="bar" style="height:${h}%"></i>`).join('')}</div><div class="bar-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></div>
-<div class="card chart-card"><h3>◎ ACCURACY TREND <span class="tag" style="float:right">LAST 8 WEEKS</span></h3><svg viewBox="0 0 600 260" width="100%" height="260"><polyline points="30,210 105,190 180,198 255,150 330,125 405,110 480,85 555,70" fill="none" stroke="#00d9ee" stroke-width="7"/><g fill="#00d9ee">${[30,105,180,255,330,405,480,555].map((x,i)=>`<circle cx="${x}" cy="${[210,190,198,150,125,110,85,70][i]}" r="7"/>`).join('')}</g></svg></div></div>`;
-}
-function profile(){
-return hero('HERO DOSSIER • SECURE ARCHIVE','MULTIVERSE AGENT PROFILE','MANAGE ACCOUNT PARAMETERS, ACTIVE DIMENSION CREDENTIALS, AND ADAPTIVE TELEMETRY')+
-`<div class="profile-layout"><div class="card profile-card"><div class="avatar-box">A</div><h2 style="text-shadow:2px 0 var(--cyan),-2px 0 var(--red)">ANSH</h2><p style="color:#777;font-weight:700;margin-top:6px">ansh@earth1610.com</p><div style="margin:20px 0"><span class="yellow-tag">* ACTIVE MULTIVERSE HERO *</span></div><img src="assets/spider.jpg"><button class="btn red full-btn" onclick="toast('Signed out of HQ')">↪ SIGN OUT OF HQ</button></div>
-<div><div class="stats">${[['▣','0','COURSES ENROLLED'],['✓','0','COMPLETED'],['♨','12d','DAILY STREAK'],['🏆','4','BADGES EARNED']].map(x=>`<div class="stat"><div style="font-size:24px">${x[0]}</div><div class="num">${x[1]}</div><small>${x[2]}</small></div>`).join('')}</div>
-<div class="card panel"><div style="display:flex;justify-content:space-between"><h3 style="color:var(--cyan)">HERO TELEMETRY SPECIFICATIONS</h3><span class="tag">ENCRYPTED</span></div><hr style="border:0;border-top:2px solid #111;margin:15px 0 30px"><div class="grid grid-2"><div><small style="color:#777;font-weight:800">HERO CODENAME</small><h3>♙ &nbsp; ansh</h3></div><div><small style="color:#777;font-weight:800">MULTIVERSE NETWORK EMAIL</small><h3 style="font-size:15px">✉ &nbsp; ansh@earth1610.com</h3></div></div><div class="activity"><h3>▦ Learning Activity</h3><small>One year of daily visits</small><div class="activity-grid">${Array.from({length:126},()=>'<i></i>').join('')}</div></div></div>
-<div class="card panel" style="margin-top:22px"><div style="display:flex;justify-content:space-between"><h3 style="color:var(--yellow)">🏅 MULTIVERSE ACHIEVEMENT BADGES</h3><b style="font-size:12px;color:#777">4 / 4 UNLOCKED</b></div><hr style="border:0;border-top:2px solid #111;margin:0 0 18px"><div class="badges">${[['◉','EARTH-1610 CADET','Registered in the Multiverse Network'],['🧠','NEURAL EXPLORER','Completed Diagnostic Pre-Quiz'],['✦','QUANTUM REPEATER','Built First Revision Study Deck'],['◌','CANON VANGUARD','Maintained Active Learning Streak']].map(x=>`<div class="badge"><div class="bicon">${x[0]}</div><b>${x[1]}</b><small>${x[2]}</small></div>`).join('')}</div></div></div></div>`;
-}
-function settings(){return hero('HQ SETTINGS','MULTIVERSE CONTROL ROOM','PERSONALIZE YOUR LEARNING HQ')+`<div class="card panel" style="max-width:800px"><h3>APPEARANCE</h3><button class="btn ${state.dark?'red':''}" onclick="toggleTheme()">☾ Toggle Dark Mode</button><hr style="margin:25px 0;border:0;border-top:2px solid #111"><h3>ACCOUNT</h3><button class="btn" onclick="toast('Profile preferences saved')">SAVE PREFERENCES</button></div>`}
-function login(){return `<div class="auth"><div class="auth-left"><div style="position:absolute;top:40px;left:45px"><img src="assets/logo.jpg" style="width:180px"></div><div class="circle"></div><img src="assets/spider.jpg"></div><div class="auth-right"><div class="auth-card"><span class="yellow-tag" style="display:block;width:max-content;margin:auto">AUTHENTICATION PORTAL</span><h1>MULTIVERSE PORTAL</h1><p style="text-align:center;color:#666;font-weight:700">ENTER YOUR CREDENTIALS TO ACCESS YOUR HQ</p><div class="field"><label>MULTIVERSE EMAIL OR USERNAME</label><input id="email" placeholder="username or hero@earth1610.com"></div><div class="field"><label>ACCESS CODE</label><input type="password" placeholder="••••••••"></div><button class="btn red full-btn" onclick="doLogin()">ϟ SIGN IN TO HQ</button><div style="text-align:center;margin:22px 0;color:#888;font-size:12px;font-weight:900">OR CONNECT VIA</div><div class="auth-actions"><button class="btn" onclick="toast('Google connection selected')">G GOOGLE</button><button class="btn" onclick="toast('GitHub connection selected')">♧ GITHUB</button></div><p style="text-align:center;margin-top:24px;color:#888;font-weight:700">NEW HERO? <a href="#/dashboard" style="color:var(--cyan)">JOIN THE LEAGUE</a></p></div></div></div>`}
+      function coursesPage() {
+        return (
+          hero(
+            "🎓 MULTIVERSE ACADEMY",
+            "MULTIVERSE COURSE PORTAL",
+            "REAL INTERACTIVE FULL-LENGTH COURSES WITH AI DIAGNOSTICS, NOTES, AND MASTERY CHALLENGES",
+          ) +
+          `<div class="card panel" style="margin-bottom:15px"><div class="search" style="width:100%"><span>⌕</span><input id="courseSearch" placeholder="SEARCH TOPICS — NEURAL NETS, NEXT.JS, SYSTEM DESIGN, RUST, DOCKER..." oninput="searchCourses(this.value)"></div></div>
+<div class="course-filter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">${["ALL", "AI / ML", "FULL STACK", "SYSTEM DESIGN", "FRONTEND", "BACKEND", "DEVOPS", "CYBERSECURITY", "SYSTEMS", "DESIGN"].map((x, i) => `<button class="btn ${i === 0 ? "red" : ""}" style="min-height:34px;padding:0 13px;font-size:11px;box-shadow:2px 2px 0 #111" onclick="filterCourses('${x}',this)">${x}</button>`).join("")}</div>
+<div class="section-title">FEATURED MULTIVERSE MISSIONS</div><div id="courseGrid" class="grid grid-4">${courses.map(courseCard).join("")}</div>`
+        );
+      }
+      function learning() {
+        return (
+          hero("LEARNING WALL", "YOUR MULTIVERSE HISTORY", "") +
+          `<div class="split"><div><div class="section-title">▣ ENROLLED & COMPLETED MISSIONS (0)</div><div class="card empty"><div class="bigicon">▱</div><h3>YOU HAVEN'T ENROLLED IN ANY COURSE MISSIONS YET.</h3><button class="btn red" onclick="location.hash='#/courses'">EXPLORE MULTIVERSE COURSES</button></div></div>
+<div><div class="card panel"><h3>🏆 TELEMETRY OVERVIEW</h3><div class="grid grid-2"><div class="stat"><div class="num" style="color:var(--cyan)">0</div><small>MISSIONS</small></div><div class="stat"><div class="num" style="color:var(--red)">0</div><small>QUIZZES</small></div></div><div class="stat" style="margin-top:15px"><div class="num" style="color:var(--yellow)">88%</div><small>AVERAGE MASTERY SCORE</small></div></div><div class="card panel" style="margin-top:22px;min-height:150px"><h3>◔ RECENT ACTIVITY</h3><p style="color:#999;text-align:center;font-weight:700;margin-top:45px">No recent activity recorded.</p></div></div></div>`
+        );
+      }
+      function revision() {
+        return (
+          hero(
+            "SPACED REPETITION ENGINE",
+            "MULTIVERSE REVISION DECK",
+            "REINFORCE NEURAL PATHWAYS FROM COMPLETED MISSIONS, AI TRANSCRIPT BREAKDOWNS, AND MASTERY QUIZZES",
+          ) +
+          `<div class="section-title">▣ COMPLETED MISSIONS & STUDY DECKS <small>0 MISSIONS SAVED</small></div><div class="card empty"><div class="bigicon">▱</div><h3>YOUR MULTIVERSE REVISION QUEUE IS EMPTY</h3><p>Watch video missions or complete mastery quizzes to automatically store study decks here.</p><button class="btn red" onclick="location.hash='#/courses'">▷ EXPLORE COURSE MISSIONS</button></div>`
+        );
+      }
+      function projects() {
+        const ms = [
+          [
+            "MODERN PORTFOLIO BUILDER",
+            "A sleek, customizable portfolio for developers to showcase their work with dark mode support.",
+            "REACT · FRAMER MOTION · TAILWIND CSS · LUCIDE REACT",
+          ],
+          [
+            "RESTFUL TASK API",
+            "A clean and efficient API for managing tasks and reminders.",
+            "NODE.JS · EXPRESS · JWT · FIREBASE",
+          ],
+          [
+            "SIMPLE SENTIMENT ANALYZER",
+            "Categorizes text input as positive, negative, or neutral for customer reviews.",
+            "PYTHON · NLTK · FLASK · REACT",
+          ],
+        ];
+        return (
+          hero(
+            "MULTIVERSE LABS",
+            "ADAPTIVE PORTFOLIO MISSIONS",
+            "GENERATING BEGINNER PROJECTS BASED ON YOUR LEARNING PATTERNS",
+          ) +
+          `<div class="grid grid-3 missions">${ms
+            .map(
+              (m) =>
+                `<article class="card mission"><span class="tag">BEGINNER</span><h3>${m[0]}</h3><b style="font-size:10px;color:#8b36e9">USE CASE</b><p>${m[1]}</p><div class="flow"><b style="color:var(--cyan)">⌘ SYSTEM FLOW</b><br><br>User edits data → UI updates live → Sections for experience, skills, and projects → Optimized for SEO.</div><div class="course-tags">${m[2]
+                  .split(" · ")
+                  .map((x) => `<span>${x}</span>`)
+                  .join(
+                    "",
+                  )}</div><button class="btn red full-btn" onclick="openModal('${m[0]}','Mission briefing loaded. Start building this project and track it from your Projects page.')">✧ START MISSION</button></article>`,
+            )
+            .join("")}</div>`
+        );
+      }
+      function interview() {
+        return `<div style="max-width:900px;margin:auto">${hero("AI SIMULATION", "MULTIVERSE INTERVIEW PREP", "")}<div class="interview"><div class="chat"><div class="bubble">🤖 Welcome to your Multiverse AI Mock Interview! I've analyzed your progress in 0 courses. Let's test your depth!</div><div class="bubble q"><span class="tag">CONCEPTUAL · INTERMEDIATE</span><br><br>Could you explain the difference between 'state' and 'props' in a React application? When would you choose one over the other for data management?</div></div><div class="chatbar"><textarea id="answer" rows="2" placeholder="TYPE YOUR ANSWER..."></textarea><button class="btn red" onclick="sendAnswer()">➤</button></div></div></div>`;
+      }
+      function analytics() {
+        return (
+          hero(
+            "TELEMETRY & SPECS",
+            "MULTIVERSE COGNITIVE TELEMETRY",
+            "DETAILED INSIGHTS INTO YOUR ADAPTIVE LEARNING VELOCITY",
+          ) +
+          `<div class="stats">${[
+            ["◷", "2.7h", "AVG. DAILY TIME", "+12%"],
+            ["◎", "88%", "QUIZ ACCURACY", "+5%"],
+            ["♧", "47", "CONCEPTS MASTERED", "+8"],
+            ["↗", "92%", "WEEKLY PROGRESS", "+3%"],
+          ]
+            .map(
+              (x) =>
+                `<div class="stat"><div style="font-size:26px">${x[0]}</div><div class="num">${x[1]}</div><small>${x[2]}</small><span class="tag" style="float:right;margin-top:-55px">${x[3]}</span></div>`,
+            )
+            .join("")}</div>
+<div class="grid grid-2"><div class="card chart-card"><h3>◷ LEARNING TIME <span class="tag" style="float:right">THIS WEEK</span></h3><div class="bars">${[55, 72, 43, 90, 65, 28, 80].map((h) => `<i class="bar" style="height:${h}%"></i>`).join("")}</div><div class="bar-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></div>
+<div class="card chart-card"><h3>◎ ACCURACY TREND <span class="tag" style="float:right">LAST 8 WEEKS</span></h3><svg viewBox="0 0 600 260" width="100%" height="260"><polyline points="30,210 105,190 180,198 255,150 330,125 405,110 480,85 555,70" fill="none" stroke="#00d9ee" stroke-width="7"/><g fill="#00d9ee">${[30, 105, 180, 255, 330, 405, 480, 555].map((x, i) => `<circle cx="${x}" cy="${[210, 190, 198, 150, 125, 110, 85, 70][i]}" r="7"/>`).join("")}</g></svg></div></div>`
+        );
+      }
+      function profile() {
+        return (
+          hero(
+            "HERO DOSSIER • SECURE ARCHIVE",
+            "MULTIVERSE AGENT PROFILE",
+            "MANAGE ACCOUNT PARAMETERS, ACTIVE DIMENSION CREDENTIALS, AND ADAPTIVE TELEMETRY",
+          ) +
+          `<div class="profile-layout"><div class="card profile-card"><div class="avatar-box">A</div><h2 style="text-shadow:2px 0 var(--cyan),-2px 0 var(--red)">ANSH</h2><p style="color:#777;font-weight:700;margin-top:6px">ansh@earth1610.com</p><div style="margin:20px 0"><span class="yellow-tag">* ACTIVE MULTIVERSE HERO *</span></div><img src="assets/spider.jpg"><button class="btn red full-btn" onclick="toast('Signed out of HQ')">↪ SIGN OUT OF HQ</button></div>
+<div><div class="stats">${[
+            ["▣", "0", "COURSES ENROLLED"],
+            ["✓", "0", "COMPLETED"],
+            ["♨", "12d", "DAILY STREAK"],
+            ["🏆", "4", "BADGES EARNED"],
+          ]
+            .map(
+              (x) =>
+                `<div class="stat"><div style="font-size:24px">${x[0]}</div><div class="num">${x[1]}</div><small>${x[2]}</small></div>`,
+            )
+            .join("")}</div>
+<div class="card panel"><div style="display:flex;justify-content:space-between"><h3 style="color:var(--cyan)">HERO TELEMETRY SPECIFICATIONS</h3><span class="tag">ENCRYPTED</span></div><hr style="border:0;border-top:2px solid #111;margin:15px 0 30px"><div class="grid grid-2"><div><small style="color:#777;font-weight:800">HERO CODENAME</small><h3>♙ &nbsp; ansh</h3></div><div><small style="color:#777;font-weight:800">MULTIVERSE NETWORK EMAIL</small><h3 style="font-size:15px">✉ &nbsp; ansh@earth1610.com</h3></div></div><div class="activity"><h3>▦ Learning Activity</h3><small>One year of daily visits</small><div class="activity-grid">${Array.from({ length: 126 }, () => "<i></i>").join("")}</div></div></div>
+<div class="card panel" style="margin-top:22px"><div style="display:flex;justify-content:space-between"><h3 style="color:var(--yellow)">🏅 MULTIVERSE ACHIEVEMENT BADGES</h3><b style="font-size:12px;color:#777">4 / 4 UNLOCKED</b></div><hr style="border:0;border-top:2px solid #111;margin:0 0 18px"><div class="badges">${[
+            ["◉", "EARTH-1610 CADET", "Registered in the Multiverse Network"],
+            ["🧠", "NEURAL EXPLORER", "Completed Diagnostic Pre-Quiz"],
+            ["✦", "QUANTUM REPEATER", "Built First Revision Study Deck"],
+            ["◌", "CANON VANGUARD", "Maintained Active Learning Streak"],
+          ]
+            .map(
+              (x) =>
+                `<div class="badge"><div class="bicon">${x[0]}</div><b>${x[1]}</b><small>${x[2]}</small></div>`,
+            )
+            .join("")}</div></div></div></div>`
+        );
+      }
+      function settings() {
+        return (
+          hero(
+            "HQ SETTINGS",
+            "MULTIVERSE CONTROL ROOM",
+            "PERSONALIZE YOUR LEARNING HQ",
+          ) +
+          `<div class="card panel" style="max-width:800px"><h3>APPEARANCE</h3><button class="btn ${state.dark ? "red" : ""}" onclick="toggleTheme()">☾ Toggle Dark Mode</button><hr style="margin:25px 0;border:0;border-top:2px solid #111"><h3>ACCOUNT</h3><button class="btn" onclick="toast('Profile preferences saved')">SAVE PREFERENCES</button></div>`
+        );
+      }
+      function login() {
+        return `<div class="auth"><div class="auth-left"><div style="position:absolute;top:40px;left:45px"><img src="assets/logo.jpg" style="width:180px"></div><div class="circle"></div><img src="assets/spider.jpg"></div><div class="auth-right"><div class="auth-card"><span class="yellow-tag" style="display:block;width:max-content;margin:auto">AUTHENTICATION PORTAL</span><h1>MULTIVERSE PORTAL</h1><p style="text-align:center;color:#666;font-weight:700">ENTER YOUR CREDENTIALS TO ACCESS YOUR HQ</p><div class="field"><label>MULTIVERSE EMAIL OR USERNAME</label><input id="email" placeholder="username or hero@earth1610.com"></div><div class="field"><label>ACCESS CODE</label><input type="password" placeholder="••••••••"></div><button class="btn red full-btn" onclick="doLogin()">ϟ SIGN IN TO HQ</button><div style="text-align:center;margin:22px 0;color:#888;font-size:12px;font-weight:900">OR CONNECT VIA</div><div class="auth-actions"><button class="btn" onclick="toast('Google connection selected')">G GOOGLE</button><button class="btn" onclick="toast('GitHub connection selected')">♧ GITHUB</button></div><p style="text-align:center;margin-top:24px;color:#888;font-weight:700">NEW HERO? <a href="#/dashboard" style="color:var(--cyan)">JOIN THE LEAGUE</a></p></div></div></div>`;
+      }
 
-function render(){
-const r=location.hash.replace('#/','')||'dashboard';state.route=r;
-let c=r==='dashboard'?dashboard():r==='courses'?coursesPage():r==='learning'?learning():r==='revision'?revision():r==='projects'?projects():r==='interview'?interview():r==='analytics'?analytics():r==='profile'?profile():r==='settings'?settings():r==='login'?login():dashboard();
-document.getElementById('root').innerHTML=r==='login'?c:shell(c);
-if(state.dark) document.body.style.filter='invert(.9) hue-rotate(180deg)';
-else document.body.style.filter='';
-window.scrollTo({top:0,behavior:'instant'});
-}
-function toggleMenu(){state.menu=!state.menu;render()}
-function closeMenu(){state.menu=false}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
-function openModal(title,body){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=`<p style="line-height:1.6;color:#666;font-weight:600;margin-bottom:20px">${body}</p><button class="btn red" onclick="closeModal();toast('Mission started')">START MISSION</button>`;document.getElementById('modalBackdrop').style.display='flex'}
-function closeModal(){document.getElementById('modalBackdrop').style.display='none'}
-function startMission(t){openModal('MISSION BRIEFING',`You selected <b>${t}</b>. Your mission interface is ready.`)}
-function doLogin(){location.hash='#/dashboard';toast('Welcome back, hero')}
-function sendAnswer(){const a=document.getElementById('answer');if(a.value.trim()){openModal('AI EVALUATION','Answer received. The AI interviewer would evaluate conceptual accuracy, examples, clarity, and depth here.');a.value=''}}
-function toggleTheme(){state.dark=!state.dark;render();toast(state.dark?'Dark mode enabled':'Light mode enabled')}
-function filterCourses(cat,btn){document.querySelectorAll('.course-filter .btn').forEach(x=>x.classList.remove('red'));btn.classList.add('red');const cards=document.querySelectorAll('#courseGrid .course-card');cards.forEach((el,i)=>el.style.display=cat==='ALL'||courses[i].tag===cat?'':'none')}
-function searchCourses(q){q=(q||'').toLowerCase();document.querySelectorAll('#courseGrid .course-card').forEach((el,i)=>{el.style.display=(courses[i].title.toLowerCase().includes(q)||courses[i].tag.toLowerCase().includes(q)||courses[i].author.toLowerCase().includes(q))?'':'none'})}
-window.addEventListener('hashchange',render);render();
-</script>
-</body>
+      function render() {
+        const r = location.hash.replace("#/", "") || "dashboard";
+        state.route = r;
+        let c =
+          r === "dashboard"
+            ? dashboard()
+            : r === "courses"
+              ? coursesPage()
+              : r === "learning"
+                ? learning()
+                : r === "revision"
+                  ? revision()
+                  : r === "projects"
+                    ? projects()
+                    : r === "interview"
+                      ? interview()
+                      : r === "analytics"
+                        ? analytics()
+                        : r === "profile"
+                          ? profile()
+                          : r === "settings"
+                            ? settings()
+                            : r === "login"
+                              ? login()
+                              : dashboard();
+        document.getElementById("root").innerHTML =
+          r === "login" ? c : shell(c);
+        if (state.dark)
+          document.body.style.filter = "invert(.9) hue-rotate(180deg)";
+        else document.body.style.filter = "";
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+      function toggleMenu() {
+        state.menu = !state.menu;
+        render();
+      }
+      function closeMenu() {
+        state.menu = false;
+      }
+      function toast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.style.display = "block";
+        setTimeout(() => (t.style.display = "none"), 2200);
+      }
+      function openModal(title, body) {
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalBody").innerHTML =
+          `<p style="line-height:1.6;color:#666;font-weight:600;margin-bottom:20px">${body}</p><button class="btn red" onclick="closeModal();toast('Mission started')">START MISSION</button>`;
+        document.getElementById("modalBackdrop").style.display = "flex";
+      }
+      function closeModal() {
+        document.getElementById("modalBackdrop").style.display = "none";
+      }
+      function startMission(t) {
+        openModal(
+          "MISSION BRIEFING",
+          `You selected <b>${t}</b>. Your mission interface is ready.`,
+        );
+      }
+      function doLogin() {
+        location.hash = "#/dashboard";
+        toast("Welcome back, hero");
+      }
+      function sendAnswer() {
+        const a = document.getElementById("answer");
+        if (a.value.trim()) {
+          openModal(
+            "AI EVALUATION",
+            "Answer received. The AI interviewer would evaluate conceptual accuracy, examples, clarity, and depth here.",
+          );
+          a.value = "";
+        }
+      }
+      function toggleTheme() {
+        state.dark = !state.dark;
+        render();
+        toast(state.dark ? "Dark mode enabled" : "Light mode enabled");
+      }
+      function filterCourses(cat, btn) {
+        document
+          .querySelectorAll(".course-filter .btn")
+          .forEach((x) => x.classList.remove("red"));
+        btn.classList.add("red");
+        const cards = document.querySelectorAll("#courseGrid .course-card");
+        cards.forEach(
+          (el, i) =>
+            (el.style.display =
+              cat === "ALL" || courses[i].tag === cat ? "" : "none"),
+        );
+      }
+      function searchCourses(q) {
+        q = (q || "").toLowerCase();
+        document
+          .querySelectorAll("#courseGrid .course-card")
+          .forEach((el, i) => {
+            el.style.display =
+              courses[i].title.toLowerCase().includes(q) ||
+              courses[i].tag.toLowerCase().includes(q) ||
+              courses[i].author.toLowerCase().includes(q)
+                ? ""
+                : "none";
+          });
+      }
+      window.addEventListener("hashchange", render);
+      render();
+    </script>
+  </body>
 </html>
